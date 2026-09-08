@@ -9,6 +9,11 @@ init function take — `api_i&`, `std::shared_ptr<api_i>`, or `api_i*`?** The
 answer here is `api_i&`, and the code shows what that buys across a `dlopen`
 boundary.
 
+[`compile_note.md`](compile_note.md) takes the next question — whether the host
+and a plugin may be built with different compilers — and answers it with a
+measured toolchain matrix. `hardened/` is the variant that survives a
+GCC/libstdc++ host loading a Clang/libc++ plugin.
+
 ## The question, and why the reference wins
 
 The host owns the api object. It is constructed before the first plugin loads
@@ -67,6 +72,9 @@ A reference to an abstract class is one pointer, in a header you control.
 | `heartbeat_plugin.cpp` | A plugin with a worker thread, logging through the host api |
 | `stale_plugin.cpp` | A module built against an older ABI generation, to exercise the rejection path |
 | `example_log.h` | A minimal `fmt`-backed logging stand-in, so the example builds on its own |
+| `compile_note.md` | Mixing toolchains across the boundary: the measured matrix, why libc++ breaks it, and the fix |
+| `hardened/` | The same example with a POD-only boundary, verified against a Clang/libc++ plugin |
+| `abi_matrix/` | `run_matrix.sh` and the `std::string_view` layout probe that produce the results in `compile_note.md` |
 
 ## Build and run
 
